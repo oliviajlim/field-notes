@@ -1,0 +1,4 @@
+interface:
+  display_name: "Learn Quiz"
+  short_description: "Teach incrementally and quiz for deep understanding."
+  default_prompt: "Help me deeply understand this and quiz me as we go."
