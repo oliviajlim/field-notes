@@ -47,18 +47,34 @@ struct FieldCard: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .containerRelativeFrame(.horizontal)
-            Button(note.audioPath != nil ? "Play" : "Record") {
-                Task {
-                    if await audioManager.requestMicrophonePermissions() {
-                        print("play: \(String(describing: note.audioPath))")
+            if note.audioPath == nil {
+                Button("Record") {
+                    guard !audioManager.isRecording else {
+                        // close it
+                        audioManager.stopRecording()
+                        return
+                    }
 
-                        audioManager.startRecording(id: note.id)
+                    // decide where the file lives, create an empty file
+
+                    Task {
+                        if await audioManager.requestMicrophonePermissions() {
+
+                            audioManager.startRecording(id: note.id)
+                            // write each buffer into it
+                        }
                     }
                 }
-            }
-            .padding(.horizontal, 20)
+                .padding(.horizontal, 20)
+            } else {
+                Button("Play") {
+                    print("play: \(String(describing: note.audioPath))")
 
-            if audioManager.activeRecordingNoteID != nil {
+                }
+                .padding(.horizontal, 20)
+            }
+
+            if audioManager.activeRecordingNoteID == note.id != nil {
                 Text("Recording...")
                     .padding(.horizontal, 20)
             }

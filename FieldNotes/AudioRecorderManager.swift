@@ -16,6 +16,10 @@ final class AudioRecorderManager {
     private let audioEngine = AVAudioEngine()
     private var recordingFile: AVAudioFile?
 
+    var isRecording: Bool {
+        activeRecordingNoteID != nil
+    }
+
     func requestMicrophonePermissions() async -> Bool {
         let granted = await AVAudioApplication.requestRecordPermission()
         print("granted \(granted)")
@@ -24,6 +28,11 @@ final class AudioRecorderManager {
     }
 
     func startRecording(id: UUID) {
+        guard !isRecording else {
+            print("already recording")
+            return
+        }
+
         do {
             let session = AVAudioSession.sharedInstance()
             try session.setCategory(.playAndRecord, mode: .default)
