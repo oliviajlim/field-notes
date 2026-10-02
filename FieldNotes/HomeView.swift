@@ -11,34 +11,6 @@ final class HomeViewModel {
     }
 }
 
-@Observable
-final class AudioRecorderManager {
-    var permissionStatus: AVAudioApplication.recordPermission = AVAudioApplication.shared.recordPermission
-
-    var activeRecordingNoteID: UUID? = nil
-    var recorder: AVAudioRecorder? = nil
-
-    func requestMicrophonePermissions() async -> Bool {
-        let granted = await AVAudioApplication.requestRecordPermission()
-        print("granted \(granted)")
-        self.permissionStatus = granted ? .granted : .denied
-        return granted
-    }
-
-    func startRecording(id: UUID) {
-        self.activeRecordingNoteID = id
-//        let audioFilename = getDocumentsDirectory().appendingPathComponent("recording.m4a")
-
-        self.recorder = AVAudioRecorder()
-        recorder?.prepareToRecord()
-    }
-
-    func stopRecording() {
-        self.activeRecordingNoteID = nil
-        self.recorder = nil
-    }
-}
-
 struct HomeView: View {
     @Bindable var viewModel: HomeViewModel
     @State var audioManager = AudioRecorderManager()
